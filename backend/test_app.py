@@ -1,16 +1,64 @@
 import sys
 import os
 import io
+from sqlalchemy import create_engine, inspect, text
 
 # Add backend directory to sys.path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from fastapi.testclient import TestClient
-from app.main import app
+from app.main import app, initialize_database
+from app.database import engine
 
 client = TestClient(app)
 
 def run_tests():
+    fresh_engine = create_engine("sqlite://")
+    initialize_database(bind=fresh_engine)
+    fresh_inspector = inspect(fresh_engine)
+    assert fresh_inspector.has_table("machines")
+    assert fresh_inspector.has_table("automotive_components")
+    fresh_engine.dispose()
+
+    schema_engine = create_engine("sqlite://")
+    with schema_engine.begin() as connection:
+        connection.execute(text(
+            "CREATE TABLE machines (id VARCHAR(50) PRIMARY KEY, name VARCHAR(100))"
+        ))
+        connection.execute(text(
+            "INSERT INTO machines (id, name) VALUES ('EXISTING-001', 'Preserved vehicle')"
+        ))
+
+    initialize_database(bind=schema_engine)
+    initialize_database(bind=schema_engine)
+    schema_inspector = inspect(schema_engine)
+    required_tables = {
+        "machines", "automotive_components", "sensor_readings", "predictions",
+        "alerts", "maintenance_tasks", "simulation_settings",
+    }
+    assert required_tables.issubset(set(schema_inspector.get_table_names()))
+    machine_columns = {column["name"] for column in schema_inspector.get_columns("machines")}
+    assert {
+        "vehicle_category", "fuel_type", "mileage", "manufacturing_year",
+        "component_health_summary",
+    }.issubset(machine_columns)
+    with schema_engine.connect() as connection:
+        preserved_name = connection.execute(
+            text("SELECT name FROM machines WHERE id = 'EXISTING-001'")
+        ).scalar_one()
+    assert preserved_name == "Preserved vehicle"
+    schema_engine.dispose()
+    print("[PASS] Database initialization creates tables before idempotent migrations and preserves records.")
+
+    with TestClient(app) as startup_client:
+        health = startup_client.get("/api/health")
+        assert health.status_code == 200
+        assert health.json()["ml_engine"]["isolation_forest"] == "trained_and_loaded"
+        assert health.json()["ml_engine"]["random_forest"] == "trained_and_loaded"
+        startup_inspector = inspect(engine)
+        assert required_tables.issubset(set(startup_inspector.get_table_names()))
+    print("[PASS] FastAPI lifespan initializes all database tables before serving requests.")
+
     print("=================================================================")
     print("STARTING AUTOMOTIVE AI FULL-STACK ENDPOINT & ENGINE TEST SUITE")
     print("=================================================================")

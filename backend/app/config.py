@@ -8,7 +8,10 @@ class Settings:
     DATA_DISCLAIMER: str = "DEMO / SIMULATED DATA - Synthetic passenger-car telemetry for demonstration only"
     
     BASE_DIR: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    DATABASE_URL: str = f"sqlite:///{os.path.join(BASE_DIR, 'smartmfg.db')}"
+    DATABASE_URL: str = os.environ.get(
+        "DATABASE_URL",
+        f"sqlite:///{os.path.join(BASE_DIR, 'smartmfg.db')}"
+    )
     MODELS_DIR: str = os.path.join(BASE_DIR, "app", "ml", "saved_models")
     REPORTS_DIR: str = os.path.join(BASE_DIR, "reports_output")
     

@@ -3,8 +3,10 @@ import datetime
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import inspect, text
 from app.config import settings
 from app.database import engine, Base
+from app import models
 from app.services.simulation_engine import simulation_engine
 from app.routes import (
     dashboard,
@@ -17,13 +19,36 @@ from app.routes import (
     simulation
 )
 
+def migrate_vehicle_columns(bind=engine):
+    inspector = inspect(bind)
+    if not inspector.has_table("machines"):
+        return
+
+    columns = {column["name"] for column in inspector.get_columns("machines")}
+    additions = {
+        "vehicle_category": "VARCHAR(30) DEFAULT 'Sedan'",
+        "fuel_type": "VARCHAR(30) DEFAULT 'Petrol'",
+        "mileage": "FLOAT DEFAULT 25000",
+        "manufacturing_year": "INTEGER DEFAULT 2024",
+        "component_health_summary": "TEXT DEFAULT '{}'",
+    }
+
+    with bind.begin() as connection:
+        for name, definition in additions.items():
+            if name not in columns:
+                connection.execute(text(f"ALTER TABLE machines ADD COLUMN {name} {definition}"))
+                columns.add(name)
+
+
+def initialize_database(bind=engine):
+    Base.metadata.create_all(bind=bind)
+    migrate_vehicle_columns(bind=bind)
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: Ensure tables, seed data, and start simulation
     print("Initializing Automotive AI database and vehicle component tables...")
-    Base.metadata.create_all(bind=engine)
-    migrate_vehicle_columns()
-    Base.metadata.create_all(bind=engine)
+    initialize_database()
     simulation_engine.seed_database_if_needed()
     await simulation_engine.start()
     print("Simulation engine activated.")
@@ -49,28 +74,6 @@ app.add_middleware(
 )
 
 from fastapi.staticfiles import StaticFiles
-from sqlalchemy import text
-
-def migrate_vehicle_columns():
-    with engine.begin() as connection:
-        columns = {
-            row[1]: row
-            for row in connection.execute(text("PRAGMA table_info(machines)")).fetchall()
-        }
-        additions = {
-            "vehicle_category": "VARCHAR(30) DEFAULT 'Sedan'",
-            "fuel_type": "VARCHAR(30) DEFAULT 'Petrol'",
-            "mileage": "FLOAT DEFAULT 25000",
-            "manufacturing_year": "INTEGER DEFAULT 2024",
-            "component_health_summary": "TEXT DEFAULT '{}'",
-        }
-        for name, definition in additions.items():
-            if name not in columns:
-                connection.execute(text(f"ALTER TABLE machines ADD COLUMN {name} {definition}"))
-
-migrate_vehicle_columns()
-Base.metadata.create_all(bind=engine)
-simulation_engine.seed_database_if_needed()
 
 # Register Routers
 app.include_router(dashboard.router)

@@ -94,5 +94,6 @@ python test_app.py
 
 ## Deployment
 
-- Render: deploy the Python backend, set `PORT` through the platform, and start `python run.py`.
+- Render: deploy the Python backend and start `python run.py`. Database tables are registered, created, migrated, seeded, and then used by the app during FastAPI startup.
+- SQLite defaults to `backend/smartmfg.db` relative to the deployed source tree. Render's filesystem is ephemeral unless a persistent disk is mounted. To retain data across deploys, mount a Render disk (for example at `/var/data`) and set `DATABASE_URL=sqlite:////var/data/smartmfg.db`. This explicitly selects the same SQLite database type at a persistent location; back up any existing database before changing its path.
 - Vercel: deploy `frontend`, set `VITE_API_URL=https://<render-service>.onrender.com`, and verify CORS connectivity.
