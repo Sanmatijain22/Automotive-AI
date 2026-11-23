@@ -6,116 +6,20 @@ from typing import List, Set
 from fastapi import WebSocket
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
-from app.models import Machine, SensorReading, Alert, Prediction, SimulationSetting, MaintenanceTask
+from app.models import Machine, SensorReading, Alert, Prediction, SimulationSetting, MaintenanceTask, AutomotiveComponent
 from app.services.anomaly_detection import anomaly_service
 from app.services.failure_prediction import prediction_service
 from app.services.maintenance_engine import maintenance_engine
 
 INITIAL_MACHINES = [
-    {
-        "id": "CNC-001",
-        "name": "CNC Machining Center",
-        "department": "Engine Block Machining Line",
-        "model_number": "EK-CNC-5AXIS-800",
-        "installation_date": "2023-03-12",
-        "operating_hours": 3420.0,
-        "baseline_temp": 62.0,
-        "baseline_vib": 1.8,
-        "baseline_rpm": 2800.0,
-        "baseline_press": 115.0,
-        "baseline_power": 28.5,
-    },
-    {
-        "id": "HYD-002",
-        "name": "Hydraulic Press",
-        "department": "Heavy Sheet Metal Stamping",
-        "model_number": "EK-HP-800TON",
-        "installation_date": "2022-08-20",
-        "operating_hours": 5120.0,
-        "baseline_temp": 58.0,
-        "baseline_vib": 2.2,
-        "baseline_rpm": 1450.0,
-        "baseline_press": 210.0,
-        "baseline_power": 46.0,
-    },
-    {
-        "id": "ENG-003",
-        "name": "Tractor Engine Assembly Unit",
-        "department": "Powertrain Assembly Bay 3",
-        "model_number": "EK-ENG-ASM-V4",
-        "installation_date": "2023-11-05",
-        "operating_hours": 2180.0,
-        "baseline_temp": 52.0,
-        "baseline_vib": 1.2,
-        "baseline_rpm": 1200.0,
-        "baseline_press": 85.0,
-        "baseline_power": 18.0,
-    },
-    {
-        "id": "GEAR-004",
-        "name": "Gear Cutting Machine",
-        "department": "Transmission & Gearbox Shop",
-        "model_number": "EK-GEAR-HOB-450",
-        "installation_date": "2022-05-18",
-        "operating_hours": 6250.0,
-        "baseline_temp": 66.0,
-        "baseline_vib": 2.5,
-        "baseline_rpm": 1800.0,
-        "baseline_press": 95.0,
-        "baseline_power": 32.0,
-    },
-    {
-        "id": "WELD-005",
-        "name": "Welding Robot",
-        "department": "Chassis Robotic Welding Cell",
-        "model_number": "EK-ROBO-ARC-6AX",
-        "installation_date": "2024-01-10",
-        "operating_hours": 1420.0,
-        "baseline_temp": 48.0,
-        "baseline_vib": 1.0,
-        "baseline_rpm": 600.0,
-        "baseline_press": 45.0,
-        "baseline_power": 14.5,
-    },
-    {
-        "id": "DRL-006",
-        "name": "Drilling Machine",
-        "department": "Cylinder Head Precision Drilling",
-        "model_number": "EK-MULTI-DRL-16",
-        "installation_date": "2023-06-25",
-        "operating_hours": 3890.0,
-        "baseline_temp": 55.0,
-        "baseline_vib": 2.0,
-        "baseline_rpm": 2200.0,
-        "baseline_press": 75.0,
-        "baseline_power": 22.0,
-    },
-    {
-        "id": "CNV-007",
-        "name": "Conveyor Motor",
-        "department": "Assembly Line Final Conveyor",
-        "model_number": "EK-DRIVE-CNV-55KW",
-        "installation_date": "2022-02-14",
-        "operating_hours": 7820.0,
-        "baseline_temp": 50.0,
-        "baseline_vib": 1.5,
-        "baseline_rpm": 950.0,
-        "baseline_press": 30.0,
-        "baseline_power": 12.0,
-    },
-    {
-        "id": "PUMP-008",
-        "name": "Hydraulic Pump Station",
-        "department": "Main Hydraulic Power Pack Station",
-        "model_number": "EK-PUMP-SYS-350",
-        "installation_date": "2023-09-30",
-        "operating_hours": 4310.0,
-        "baseline_temp": 64.0,
-        "baseline_vib": 2.4,
-        "baseline_rpm": 1500.0,
-        "baseline_press": 175.0,
-        "baseline_power": 38.5,
-    }
+    {"id":"VH-001","name":"Urban Hatchback","department":"Engine & Powertrain","model_number":"Generic Hatchback 2024","vehicle_category":"Hatchback","fuel_type":"Petrol","mileage":24500,"manufacturing_year":2024,"operating_hours":3420,"baseline_temp":92,"baseline_vib":1.8,"baseline_rpm":2400,"baseline_press":3.2,"baseline_power":18},
+    {"id":"VH-002","name":"Executive Sedan","department":"Engine & Powertrain","model_number":"Generic Sedan 2023","vehicle_category":"Sedan","fuel_type":"Hybrid","mileage":42100,"manufacturing_year":2023,"operating_hours":5120,"baseline_temp":88,"baseline_vib":2.0,"baseline_rpm":2200,"baseline_press":3.1,"baseline_power":21},
+    {"id":"VH-003","name":"Adventure SUV","department":"Chassis & Suspension","model_number":"Generic SUV 2025","vehicle_category":"SUV","fuel_type":"Diesel","mileage":18800,"manufacturing_year":2025,"operating_hours":2180,"baseline_temp":95,"baseline_vib":2.4,"baseline_rpm":2100,"baseline_press":3.4,"baseline_power":32},
+    {"id":"VH-004","name":"City Electric","department":"Battery & Electrical","model_number":"Generic EV 2025","vehicle_category":"Electric Vehicle","fuel_type":"Electric","mileage":12850,"manufacturing_year":2025,"operating_hours":6250,"baseline_temp":72,"baseline_vib":1.2,"baseline_rpm":800,"baseline_press":12.4,"baseline_power":46},
+    {"id":"VH-005","name":"Family Compact","department":"Braking & Safety","model_number":"Generic Hatchback 2022","vehicle_category":"Hatchback","fuel_type":"Petrol","mileage":68500,"manufacturing_year":2022,"operating_hours":1420,"baseline_temp":90,"baseline_vib":1.6,"baseline_rpm":1900,"baseline_press":3.0,"baseline_power":16},
+    {"id":"VH-006","name":"Premium Sedan","department":"Cooling & Thermal","model_number":"Generic Sedan 2024","vehicle_category":"Sedan","fuel_type":"Petrol","mileage":31200,"manufacturing_year":2024,"operating_hours":3890,"baseline_temp":91,"baseline_vib":1.9,"baseline_rpm":2300,"baseline_press":3.3,"baseline_power":24},
+    {"id":"VH-007","name":"Long-range SUV","department":"Tyres & Wheels","model_number":"Generic SUV 2023","vehicle_category":"SUV","fuel_type":"Hybrid","mileage":57900,"manufacturing_year":2023,"operating_hours":7820,"baseline_temp":94,"baseline_vib":2.2,"baseline_rpm":2050,"baseline_press":32.0,"baseline_power":28},
+    {"id":"VH-008","name":"Urban Electric SUV","department":"Battery & Electrical","model_number":"Generic EV 2025","vehicle_category":"Electric Vehicle","fuel_type":"Electric","mileage":9200,"manufacturing_year":2025,"operating_hours":4310,"baseline_temp":70,"baseline_vib":1.1,"baseline_rpm":750,"baseline_press":12.6,"baseline_power":44},
 ]
 
 class ConnectionManager:
@@ -146,8 +50,8 @@ class SimulationEngine:
         self.is_running = True
         self.task = None
         self.active_scenario = "NORMAL"
-        self.injected_machine_id = "CNC-001"
-        self.fault_type = "bearing_and_thermal" # bearing_and_thermal, hydraulic_leak, motor_overload
+        self.injected_machine_id = "VH-001"
+        self.fault_type = "engine_overheat"
         self.fault_step = 0
         self.max_fault_steps = 10
 
@@ -155,8 +59,18 @@ class SimulationEngine:
         db: Session = SessionLocal()
         try:
             count = db.query(Machine).count()
-            if count == 0:
-                print("Seeding initial 8 industrial machines into database...")
+            legacy_exists = db.query(Machine).filter(Machine.id.like("CNC-%")).first() is not None
+            if count == 0 or legacy_exists:
+                if legacy_exists:
+                    print("Replacing legacy tractor/industrial records with automotive vehicle records...")
+                    db.query(AutomotiveComponent).delete()
+                    db.query(MaintenanceTask).delete()
+                    db.query(Alert).delete()
+                    db.query(Prediction).delete()
+                    db.query(SensorReading).delete()
+                    db.query(Machine).delete()
+                    db.commit()
+                print("Seeding 8 passenger cars into the automotive fleet...")
                 now = datetime.datetime.utcnow()
                 for data in INITIAL_MACHINES:
                     m = Machine(
@@ -164,7 +78,7 @@ class SimulationEngine:
                         name=data["name"],
                         department=data["department"],
                         model_number=data["model_number"],
-                        installation_date=data["installation_date"],
+                        installation_date=data.get("installation_date", "2024-01-15"),
                         operating_hours=data["operating_hours"],
                         status="healthy",
                         health_score=94.5,
@@ -176,6 +90,10 @@ class SimulationEngine:
                         current_rpm=data["baseline_rpm"],
                         current_pressure=data["baseline_press"],
                         current_power=data["baseline_power"],
+                        vehicle_category=data["vehicle_category"],
+                        fuel_type=data["fuel_type"],
+                        mileage=data["mileage"],
+                        manufacturing_year=data["manufacturing_year"],
                         baseline_temp=data["baseline_temp"],
                         baseline_vib=data["baseline_vib"],
                         baseline_rpm=data["baseline_rpm"],
@@ -203,29 +121,51 @@ class SimulationEngine:
                         )
                         db.add(reading)
 
+                    component_specs = [
+                        ("Engine System", "Engine Assembly"),
+                        ("Transmission System", "Transmission Assembly"),
+                        ("Braking System", "Brake Assembly"),
+                        ("Battery and Electrical", "Battery and Charging System"),
+                        ("Suspension System", "Suspension Assembly"),
+                        ("Cooling System", "Cooling Assembly"),
+                        ("Tyre and Wheel System", "Tyre and Wheel Assembly"),
+                    ]
+                    for index, (category, name) in enumerate(component_specs, start=1):
+                        db.add(AutomotiveComponent(
+                            id=f"{data['id']}-CMP-{index:02d}",
+                            vehicle_id=data["id"],
+                            category=category,
+                            name=name,
+                            health_score=round(random.uniform(88.0, 98.0), 1),
+                            operating_status="healthy",
+                            failure_risk="Low Risk",
+                            sensor_readings="{}",
+                            maintenance_history="[]",
+                        ))
+
                 # Seed sample initial maintenance tasks
                 task1 = MaintenanceTask(
                     id="MNT-101",
-                    machine_id="GEAR-004",
-                    title="Lubrication & Hob Cutter Inspection",
-                    description="Routine scheduled lubrication of spindle gears and check tool wear index.",
+                    machine_id="VH-003",
+                    title="Suspension and Shock Absorber Inspection",
+                    description="Inspect suspension bushings, shock absorber condition, and wheel vibration.",
                     priority="MEDIUM",
                     status="UPCOMING",
                     category="Preventive",
                     scheduled_date=now + datetime.timedelta(days=3),
-                    assigned_technician="V. Sharma (Senior Machinist)",
+                    assigned_technician="Senior Automotive Technician",
                     estimated_hours=2.0
                 )
                 task2 = MaintenanceTask(
                     id="MNT-102",
-                    machine_id="CNV-007",
-                    title="Conveyor Drive Belt Tension Check",
-                    description="Examine belt deflection and drive pulley bearing alignment.",
+                    machine_id="VH-007",
+                    title="Tyre Pressure and Alignment Check",
+                    description="Inspect tyre pressure, tread wear, wheel balance, and alignment.",
                     priority="LOW",
                     status="SCHEDULED",
                     category="Inspection",
                     scheduled_date=now + datetime.timedelta(days=7),
-                    assigned_technician="R. Patel (Mechanic)",
+                    assigned_technician="Tyre Service Technician",
                     estimated_hours=1.5
                 )
                 db.add(task1)
@@ -249,7 +189,7 @@ class SimulationEngine:
         self.is_running = False
         print("Simulation loop paused.")
 
-    def set_scenario(self, scenario: str, machine_id: str = "CNC-001", fault_type: str = "bearing_and_thermal"):
+    def set_scenario(self, scenario: str, machine_id: str = "VH-001", fault_type: str = "engine_overheat"):
         self.active_scenario = scenario
         self.injected_machine_id = machine_id
         self.fault_type = fault_type
@@ -295,15 +235,15 @@ class SimulationEngine:
                     self.fault_step = min(self.fault_step + 1, self.max_fault_steps)
                     severity_factor = self.fault_step / self.max_fault_steps # 0.1 to 1.0
 
-                    if self.fault_type == "bearing_and_thermal":
-                        # CNC overheating + critical vibration
+                    if self.fault_type in ("bearing_and_thermal", "engine_overheat"):
+                        # Engine overheating and abnormal vibration
                         new_t = base_t + (severity_factor * 33.0) + random.uniform(-1.0, 1.0) # Up to ~95°C
                         new_v = base_v + (severity_factor * 6.8) + random.uniform(-0.3, 0.4)  # Up to ~8.6 mm/s
                         new_rpm = base_rpm - (severity_factor * 250.0) + random.uniform(-15, 15)
                         new_p = base_p + random.uniform(-2, 2)
                         new_kw = base_kw + (severity_factor * 18.0) + random.uniform(-1, 1) # Overcurrent
-                    elif self.fault_type == "hydraulic_leak":
-                        # Hydraulic press pressure loss
+                    elif self.fault_type in ("hydraulic_leak", "transmission_fault"):
+                        # Transmission/gearbox pressure loss
                         new_t = base_t + (severity_factor * 18.0) + random.uniform(-1.0, 1.0)
                         new_v = base_v + (severity_factor * 2.5) + random.uniform(-0.2, 0.2)
                         new_rpm = base_rpm + random.uniform(-10, 10)
@@ -399,7 +339,7 @@ class SimulationEngine:
                         
                         alert_id = f"ALT-{random.randint(1000, 9999)}"
                         if new_v >= 7.0:
-                            anomaly_desc = "Critical Spindle Vibration Exceedance"
+                            anomaly_desc = "Critical Engine or Drivetrain Vibration"
                             detected_str = f"{new_v} mm/s"
                             thresh_str = "4.5 mm/s (ISO 10816)"
                         elif new_t >= 88.0:
@@ -407,7 +347,7 @@ class SimulationEngine:
                             detected_str = f"{new_t} °C"
                             thresh_str = "80.0 °C"
                         elif new_p < 60.0:
-                            anomaly_desc = "Severe Hydraulic Pressure Loss"
+                            anomaly_desc = "Severe Transmission Pressure Loss"
                             detected_str = f"{new_p} bar"
                             thresh_str = "80.0 bar"
                         else:

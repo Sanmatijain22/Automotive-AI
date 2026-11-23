@@ -57,5 +57,5 @@
       "support": 1500.0
     }
   },
-  "disclaimer": "DEMO / SIMULATED DATA - Escorts Kubota Manufacturing Facilities Demo. Predictions are demonstration model outputs on synthetic training distributions."
+  "disclaimer": "DEMO / SIMULATED DATA - Synthetic passenger-car telemetry. Predictions are demonstration outputs, not real-world vehicle validation."
 }

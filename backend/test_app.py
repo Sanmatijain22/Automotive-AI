@@ -12,16 +12,16 @@ client = TestClient(app)
 
 def run_tests():
     print("=================================================================")
-    print("STARTING SMARTMFG AI FULL-STACK ENDPOINT & ENGINE TEST SUITE")
+    print("STARTING AUTOMOTIVE AI FULL-STACK ENDPOINT & ENGINE TEST SUITE")
     print("=================================================================")
 
     # 1. Health check
     res = client.get("/api/health")
     assert res.status_code == 200, f"Health check failed: {res.status_code}"
     data = res.json()
-    assert data["plant"] == "ESCORTS-KUBOTA-HQ"
+    assert data["plant"] == "PASSENGER-CAR-FLEET"
     assert data["ml_engine"]["isolation_forest"] == "trained_and_loaded"
-    print("[PASS] Test 1: System Health & Escorts-Kubota plant metadata validated.")
+    print("[PASS] Test 1: System Health & passenger-fleet metadata validated.")
 
     # 2. Dashboard Stats
     res = client.get("/api/dashboard/stats")
@@ -37,25 +37,25 @@ def run_tests():
     assert res.status_code == 200
     machines = res.json()
     assert len(machines) == 8
-    print(f"[PASS] Test 3: 8 industrial machines loaded successfully.")
+    print("[PASS] Test 3: 8 passenger vehicles loaded successfully.")
 
     # 4. Machine Detail
-    res = client.get("/api/machines/CNC-001")
+    res = client.get("/api/machines/VH-001")
     assert res.status_code == 200
     m_detail = res.json()
-    assert m_detail["id"] == "CNC-001"
-    assert m_detail["name"] == "CNC Machining Center"
-    print(f"[PASS] Test 4: Machine Detail for CNC-001 verified.")
+    assert m_detail["id"] == "VH-001"
+    assert m_detail["vehicle_category"] in ["Hatchback", "Sedan", "SUV", "Electric Vehicle"]
+    print("[PASS] Test 4: Vehicle detail for VH-001 verified.")
 
     # 5. Machine History
-    res = client.get("/api/machines/CNC-001/history?limit=10")
+    res = client.get("/api/machines/VH-001/history?limit=10")
     assert res.status_code == 200
     history = res.json()
     assert len(history) > 0
-    print(f"[PASS] Test 5: Sensor telemetry history for CNC-001 verified ({len(history)} readings).")
+    print(f"[PASS] Test 5: Vehicle telemetry history verified ({len(history)} readings).")
 
     # 6. Machine Recommendations
-    res = client.get("/api/machines/CNC-001/recommendations")
+    res = client.get("/api/machines/VH-001/recommendations")
     assert res.status_code == 200
     recs = res.json()
     assert "recommendations" in recs
@@ -114,9 +114,9 @@ def run_tests():
 
     # 11. Maintenance Tasks & Creation
     new_task_payload = {
-        "machine_id": "CNC-001",
-        "title": "Automated Spindle Inspection Work Order",
-        "description": "Examine radial runout and lubricate front bearings.",
+        "machine_id": "VH-001",
+        "title": "Engine and Cooling Inspection",
+        "description": "Inspect coolant level, radiator, thermostat, and engine temperature sensor.",
         "priority": "HIGH",
         "category": "Predictive",
         "assigned_technician": "R. Verma (Lead Tech)",
@@ -125,7 +125,7 @@ def run_tests():
     res_task = client.post("/api/maintenance", json=new_task_payload)
     assert res_task.status_code == 200
     created_task = res_task.json()
-    assert created_task["machine_id"] == "CNC-001"
+    assert created_task["machine_id"] == "VH-001"
     print(f"[PASS] Test 11: Created and persisted maintenance task ({created_task['id']}).")
 
     # 12. Update Maintenance Task to COMPLETED
@@ -135,17 +135,17 @@ def run_tests():
     print("[PASS] Test 12: Updated task status to COMPLETED in database.")
 
     # 13. Downloadable PDF Report Generation with ReportLab
-    res_pdf = client.get("/api/reports/CNC-001")
+    res_pdf = client.get("/api/reports/VH-001")
     assert res_pdf.status_code == 200
     assert res_pdf.headers["content-type"] == "application/pdf"
     assert len(res_pdf.content) > 1000
-    print(f"[PASS] Test 13: PDF Health Report generated for CNC-001 ({len(res_pdf.content)} bytes).")
+    print(f"[PASS] Test 13: PDF vehicle health report generated ({len(res_pdf.content)} bytes).")
 
     # 14. Simulation Scenario Control
     res_scen = client.post("/api/simulation/scenario", json={
         "scenario": "FAULT_INJECTION",
-        "machine_id": "CNC-001",
-        "fault_type": "bearing_and_thermal"
+        "machine_id": "VH-001",
+        "fault_type": "engine_overheat"
     })
     assert res_scen.status_code == 200
     assert res_scen.json()["status"] == "scenario_applied"
@@ -158,7 +158,7 @@ def run_tests():
     # 15. Static Frontend check
     res_fe = client.get("/")
     assert res_fe.status_code == 200
-    assert "SMARTMFG" in res_fe.text or "<!doctype html>" in res_fe.text
+    assert "AUTOMOTIVE AI" in res_fe.text or "<!doctype html>" in res_fe.text
     print("[PASS] Test 15: Built frontend dist served directly at root /.")
 
     print("=================================================================")

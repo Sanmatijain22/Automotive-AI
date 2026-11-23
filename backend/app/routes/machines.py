@@ -2,12 +2,14 @@ from typing import Optional, List
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.models import Machine, SensorReading, Alert, MaintenanceTask
+from app.models import Machine, SensorReading, Alert, MaintenanceTask, AutomotiveComponent
 from app.schemas import MachineResponse, SensorReadingResponse
 from app.services.maintenance_engine import maintenance_engine
 from app.services.failure_prediction import prediction_service
 
 router = APIRouter(prefix="/api/machines", tags=["Machines"])
+vehicles_router = APIRouter(prefix="/api/vehicles", tags=["Vehicles"])
+components_router = APIRouter(prefix="/api/components", tags=["Components"])
 
 @router.get("", response_model=List[MachineResponse])
 def get_machines(
@@ -29,14 +31,27 @@ def get_machines(
         )
         
     machines = query.order_by(Machine.id.asc()).all()
-    return machines
+    return [
+        {
+            **{column.name: getattr(machine, column.name) for column in Machine.__table__.columns},
+            "vehicle_id": machine.id,
+            "vehicle_model": machine.name,
+            "maintenance_status": machine.status,
+        }
+        for machine in machines
+    ]
 
 @router.get("/{machine_id}", response_model=MachineResponse)
 def get_machine_detail(machine_id: str, db: Session = Depends(get_db)):
     machine = db.query(Machine).filter(Machine.id == machine_id).first()
     if not machine:
         raise HTTPException(status_code=404, detail=f"Machine {machine_id} not found")
-    return machine
+    return {
+        **{column.name: getattr(machine, column.name) for column in Machine.__table__.columns},
+        "vehicle_id": machine.id,
+        "vehicle_model": machine.name,
+        "maintenance_status": machine.status,
+    }
 
 @router.get("/{machine_id}/history", response_model=List[SensorReadingResponse])
 def get_machine_sensor_history(
@@ -87,4 +102,60 @@ def get_machine_recommendations(machine_id: str, db: Session = Depends(get_db)):
         "recommendations": rec,
         "prediction_breakdown": pred
     }
+
+@vehicles_router.get("")
+def get_vehicles(db: Session = Depends(get_db)):
+    vehicles = db.query(Machine).order_by(Machine.id.asc()).all()
+    return [
+        {
+            "vehicle_id": vehicle.id,
+            "vehicle_model": vehicle.name,
+            "vehicle_category": vehicle.vehicle_category,
+            "manufacturing_year": vehicle.manufacturing_year,
+            "fuel_type": vehicle.fuel_type,
+            "mileage": vehicle.mileage,
+            "vehicle_health_score": vehicle.health_score,
+            "component_health_summary": vehicle.component_health_summary,
+            "maintenance_status": vehicle.status,
+        }
+        for vehicle in vehicles
+    ]
+
+@vehicles_router.get("/{vehicle_id}")
+def get_vehicle(vehicle_id: str, db: Session = Depends(get_db)):
+    vehicle = db.query(Machine).filter(Machine.id == vehicle_id).first()
+    if not vehicle:
+        raise HTTPException(status_code=404, detail=f"Vehicle {vehicle_id} not found")
+    return {
+        "vehicle_id": vehicle.id,
+        "vehicle_model": vehicle.name,
+        "vehicle_category": vehicle.vehicle_category,
+        "manufacturing_year": vehicle.manufacturing_year,
+        "fuel_type": vehicle.fuel_type,
+        "mileage": vehicle.mileage,
+        "vehicle_health_score": vehicle.health_score,
+        "component_health_summary": vehicle.component_health_summary,
+        "maintenance_status": vehicle.status,
+    }
+
+@components_router.get("")
+def get_components(vehicle_id: Optional[str] = None, db: Session = Depends(get_db)):
+    query = db.query(AutomotiveComponent)
+    if vehicle_id:
+        query = query.filter(AutomotiveComponent.vehicle_id == vehicle_id)
+    components = query.all()
+    return [
+        {
+            "component_id": component.id,
+            "component_name": component.name,
+            "vehicle_id": component.vehicle_id,
+            "category": component.category,
+            "health_score": component.health_score,
+            "operating_status": component.operating_status,
+            "failure_risk": component.failure_risk,
+            "sensor_readings": component.sensor_readings,
+            "maintenance_history": component.maintenance_history,
+        }
+        for component in components
+    ]
 

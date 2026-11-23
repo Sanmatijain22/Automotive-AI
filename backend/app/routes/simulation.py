@@ -10,7 +10,7 @@ router = APIRouter(prefix="/api/simulation", tags=["Simulation"])
 
 class ScenarioRequest(BaseModel):
     scenario: str # NORMAL, FAULT_INJECTION, HYDRAULIC_LEAK, MOTOR_OVERLOAD
-    machine_id: Optional[str] = "CNC-001"
+    machine_id: Optional[str] = "VH-001"
     fault_type: Optional[str] = "bearing_and_thermal"
 
 @router.post("/start")
@@ -27,7 +27,7 @@ async def pause_simulation():
 def set_simulation_scenario(req: ScenarioRequest):
     simulation_engine.set_scenario(
         scenario=req.scenario,
-        machine_id=req.machine_id or "CNC-001",
+        machine_id=req.machine_id or "VH-001",
         fault_type=req.fault_type or "bearing_and_thermal"
     )
     return {

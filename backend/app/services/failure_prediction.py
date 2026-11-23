@@ -36,28 +36,28 @@ class FailurePredictor:
         
         # Physics & operational rule evaluations for explainability
         if vibration >= 7.0:
-            contributing_factors.append(f"Critical vibration: {vibration:.1f} mm/s (exceeds ISO 10816 class limit 4.5 mm/s)")
+            contributing_factors.append(f"Critical drivetrain vibration: {vibration:.1f} mm/s")
         elif vibration >= 4.0:
-            contributing_factors.append(f"Elevated vibration: {vibration:.1f} mm/s (bearing wear / misalignment signature)")
+            contributing_factors.append(f"Elevated vibration: {vibration:.1f} mm/s (bearing, mount, or wheel imbalance signature)")
             
         if temperature >= 90.0:
-            contributing_factors.append(f"Thermal runaway warning: {temperature:.1f} °C (exceeds critical threshold 85°C)")
+            contributing_factors.append(f"Engine thermal warning: {temperature:.1f} °C (exceeds critical threshold 85°C)")
         elif temperature >= 78.0:
-            contributing_factors.append(f"Elevated operating temperature: {temperature:.1f} °C (cooling degradation trend)")
+            contributing_factors.append(f"Elevated engine temperature: {temperature:.1f} °C (cooling degradation trend)")
             
         if pressure < 60.0:
-            contributing_factors.append(f"Low hydraulic pressure: {pressure:.1f} bar (suction cavitations or internal seal leakage)")
+            contributing_factors.append(f"Low transmission pressure: {pressure:.1f} bar (pump, seal, or fluid-level concern)")
         elif pressure > 210.0:
-            contributing_factors.append(f"Hydraulic pressure surge: {pressure:.1f} bar (line restriction or relief valve bypass)")
+            contributing_factors.append(f"Pressure surge: {pressure:.1f} bar (control valve or restriction concern)")
             
         if power > 50.0:
-            contributing_factors.append(f"Abnormal power draw: {power:.1f} kW (motor mechanical overload / drag)")
+            contributing_factors.append(f"Abnormal electrical load: {power:.1f} kW (battery, alternator, or accessory concern)")
             
         if operating_hours > 7000.0:
             contributing_factors.append(f"High cumulative run hours: {operating_hours:.0f} hrs (fatigue lifecycle wear)")
 
         if not contributing_factors:
-            contributing_factors.append("All sensor channels operating within nominal industrial tolerances")
+            contributing_factors.append("All monitored vehicle sensor channels are within configured demo tolerances")
 
         if self.scaler is not None and self.model is not None:
             features_scaled = self.scaler.transform(features_df)
@@ -87,16 +87,16 @@ class FailurePredictor:
         if risk_label == "High Risk":
             explanation = (
                 f"Random Forest model classified high failure likelihood (Risk Score: {risk_score}%). "
-                f"Primary drivers: {'; '.join(contributing_factors[:2])}. Immediate maintenance intervention required to prevent catastrophic stoppage."
+                f"Primary drivers: {'; '.join(contributing_factors[:2])}. Immediate automotive inspection is recommended."
             )
         elif risk_label == "Medium Risk":
             explanation = (
                 f"Model detected early wear signature (Risk Score: {risk_score}%). "
-                f"Primary observations: {'; '.join(contributing_factors[:2])}. Machine remains operable under observation; schedule inspection within 48 hours."
+                f"Primary observations: {'; '.join(contributing_factors[:2])}. Vehicle remains operable under observation; schedule inspection promptly."
             )
         else:
             explanation = (
-                f"Normal operational state (Risk Score: {risk_score}%). Sensor telemetry conforms to nominal machine specifications. No maintenance required."
+                f"Normal operational state (Risk Score: {risk_score}%). Sensor telemetry conforms to the configured passenger-car demo profile."
             )
 
         return {

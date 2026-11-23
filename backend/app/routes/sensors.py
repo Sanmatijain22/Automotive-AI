@@ -14,7 +14,9 @@ def get_live_sensors(db: Session = Depends(get_db)):
     for m in machines:
         results.append({
             "machine_id": m.id,
+            "vehicle_id": m.id,
             "machine_name": m.name,
+            "vehicle_model": m.name,
             "department": m.department,
             "status": m.status,
             "temperature": m.current_temperature,

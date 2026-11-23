@@ -48,7 +48,7 @@ export const MachinesPage: React.FC<MachinesPageProps> = ({
     e.stopPropagation();
     setInjectingId(machineId);
     try {
-      await triggerSimulationScenario('FAULT_INJECTION', machineId, 'bearing_and_thermal');
+      await triggerSimulationScenario('FAULT_INJECTION', machineId, 'engine_overheat');
       onRefresh();
     } catch (err) {
       console.error(err);
@@ -63,13 +63,13 @@ export const MachinesPage: React.FC<MachinesPageProps> = ({
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-slate-800">
         <div>
           <h1 className="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
-            <span>Live Industrial Machine Monitoring</span>
+            <span>Live Passenger Vehicle Monitoring</span>
             <span className="text-xs px-2 py-0.5 rounded bg-blue-900/60 text-blue-300 border border-blue-700/50 font-mono">
-              8 Plant Assets
+              8 Fleet Vehicles
             </span>
           </h1>
           <p className="text-xs text-slate-400">
-            Real-time multi-channel sensor telemetry, dynamic threshold bounding, and unsupervised anomaly scoring.
+            Real-time automotive component telemetry, configured thresholds, and anomaly scoring.
           </p>
         </div>
 
@@ -100,7 +100,7 @@ export const MachinesPage: React.FC<MachinesPageProps> = ({
             <Filter className="h-3.5 w-3.5" /> Filter:
           </span>
           {[
-            { id: 'all', label: 'All Machines', count: machines.length },
+            { id: 'all', label: 'All Vehicles', count: machines.length },
             { id: 'healthy', label: 'Healthy', count: machines.filter(m => m.status === 'healthy').length },
             { id: 'warning', label: 'Warning', count: machines.filter(m => m.status === 'warning').length },
             { id: 'critical', label: 'Critical', count: machines.filter(m => m.status === 'critical').length },
@@ -127,7 +127,7 @@ export const MachinesPage: React.FC<MachinesPageProps> = ({
           <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400" />
           <input
             type="text"
-            placeholder="Search by Machine ID or Name..."
+            placeholder="Search by Vehicle ID or Model..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
@@ -257,7 +257,7 @@ export const MachinesPage: React.FC<MachinesPageProps> = ({
                 <div className="mt-3 pt-2.5 border-t border-slate-800/80 flex items-center justify-between text-xs">
                   <button
                     onClick={(e) => handleQuickFault(e, m.id)}
-                    title="Simulate immediate stress/overheat on this machine"
+                    title="Simulate engine stress or component fault on this vehicle"
                     className="text-[10px] text-slate-400 hover:text-rose-400 flex items-center gap-1 p-1 rounded hover:bg-slate-800 transition-colors"
                   >
                     <Flame className="h-3 w-3 text-rose-500" />

@@ -66,7 +66,7 @@ def create_maintenance_task(task_in: MaintenanceTaskCreate, db: Session = Depend
         status=task_in.status.upper() if task_in.status else "SCHEDULED",
         category=task_in.category or "Predictive",
         scheduled_date=sched_date,
-        assigned_technician=task_in.assigned_technician or "Escorts Kubota Maintenance Team",
+        assigned_technician=task_in.assigned_technician or "Automotive Maintenance Team",
         estimated_hours=task_in.estimated_hours or 2.0,
         notes=task_in.notes
     )

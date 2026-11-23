@@ -1,11 +1,11 @@
 import os
 
 class Settings:
-    PROJECT_NAME: str = "SMARTMFG AI – Predictive Maintenance Intelligence Suite"
-    PLANT: str = "ESCORTS-KUBOTA-HQ"
-    DEPARTMENT: str = "Manufacturing Operations"
-    SYSTEM_NAME: str = "Industrial Machine Health Monitoring"
-    DATA_DISCLAIMER: str = "DEMO / SIMULATED DATA - Escorts Kubota Manufacturing Facilities Demo"
+    PROJECT_NAME: str = "AUTOMOTIVE AI – Smart Car Component Predictive Maintenance Intelligence System"
+    PLANT: str = "PASSENGER-CAR-FLEET"
+    DEPARTMENT: str = "Automotive Service Operations"
+    SYSTEM_NAME: str = "Vehicle Component Health Monitoring"
+    DATA_DISCLAIMER: str = "DEMO / SIMULATED DATA - Synthetic passenger-car telemetry for demonstration only"
     
     BASE_DIR: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     DATABASE_URL: str = f"sqlite:///{os.path.join(BASE_DIR, 'smartmfg.db')}"

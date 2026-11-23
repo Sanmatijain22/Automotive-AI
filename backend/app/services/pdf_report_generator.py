@@ -11,7 +11,7 @@ from app.config import settings
 
 def generate_machine_pdf_report(machine, latest_readings, predictions_info, alerts, recommendations) -> bytes:
     """
-    Generates a high-quality industrial PDF health report using ReportLab.
+    Generates a passenger-vehicle health report using ReportLab.
     """
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(
@@ -78,8 +78,8 @@ def generate_machine_pdf_report(machine, latest_readings, predictions_info, aler
     # 1. Top Header Banner
     header_data = [
         [
-            Paragraph("<b>SMARTMFG AI</b><br/><font size='8' color='#2563EB'>PREDICTIVE MAINTENANCE INTELLIGENCE SUITE</font>", header_title_style),
-            Paragraph(f"<b>Plant:</b> {settings.PLANT}<br/><b>Dept:</b> {machine.department}<br/><b>Date:</b> {datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}", subtitle_style)
+            Paragraph("<b>AUTOMOTIVE AI</b><br/><font size='8' color='#2563EB'>SMART CAR COMPONENT PREDICTIVE MAINTENANCE</font>", header_title_style),
+            Paragraph(f"<b>Fleet:</b> {settings.PLANT}<br/><b>Department:</b> {machine.department}<br/><b>Date:</b> {datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}", subtitle_style)
         ]
     ]
     t_header = Table(header_data, colWidths=[340, 200])
@@ -303,7 +303,7 @@ def generate_machine_pdf_report(machine, latest_readings, predictions_info, aler
     story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor('#CBD5E1')))
     story.append(Spacer(1, 4))
     footer_text = Paragraph(
-        "Escorts Kubota Manufacturing Facilities Demo | SMARTMFG AI Engine v1.4 | Report Generated Electronically | Data Classification: SIMULATED / DEMO",
+        "Passenger-Car Automotive Demo | AUTOMOTIVE AI | Report Generated Electronically | Data Classification: SIMULATED / DEMO",
         subtitle_style
     )
     story.append(footer_text)

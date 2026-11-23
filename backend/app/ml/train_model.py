@@ -13,8 +13,7 @@ os.makedirs(MODELS_DIR, exist_ok=True)
 
 def generate_synthetic_industrial_data(n_samples: int = 7500, random_seed: int = 42):
     """
-    Generate synthetic sensor data representing realistic industrial tractor & automotive
-    manufacturing equipment (CNC machining, hydraulic presses, assembly lines, pumps).
+    Generate synthetic passenger-car sensor data for component failure-risk demonstrations.
     Features:
       1. Temperature (°C): 40 - 110
       2. Vibration (mm/s): 0.5 - 15.0
@@ -148,7 +147,7 @@ def train_and_save_models():
         "validation_accuracy": float(acc),
         "feature_importances": importances,
         "classification_report": report,
-        "disclaimer": "DEMO / SIMULATED DATA - Escorts Kubota Manufacturing Facilities Demo. Predictions are demonstration model outputs on synthetic training distributions."
+        "disclaimer": "DEMO / SIMULATED DATA - Synthetic passenger-car telemetry. Predictions are demonstration outputs, not real-world vehicle validation."
     }
     
     with open(os.path.join(MODELS_DIR, "metadata.json"), "w") as f:

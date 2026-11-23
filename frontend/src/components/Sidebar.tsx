@@ -29,7 +29,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: 'machines',
-      label: 'Live Machine Monitoring',
+      label: 'Live Vehicle Monitoring',
       icon: Activity,
       badge: '8 Active'
     },
@@ -98,10 +98,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="p-4 border-t border-slate-800 bg-slate-950/40">
         <div className="flex items-center space-x-2.5 mb-2">
           <Building2 className="h-4 w-4 text-blue-400" />
-          <span className="text-xs font-bold text-slate-200">Escorts Kubota Limited</span>
+          <span className="text-xs font-bold text-slate-200">Passenger Car Fleet</span>
         </div>
         <p className="text-[11px] text-slate-400 leading-relaxed mb-3">
-          Tractor & Automotive Machinery Reliability Division.
+          Vehicle health, component reliability & predictive maintenance.
         </p>
         <div className="p-2 rounded bg-slate-900 border border-slate-800 text-[10px] text-slate-400 space-y-1">
           <div className="flex items-center justify-between">

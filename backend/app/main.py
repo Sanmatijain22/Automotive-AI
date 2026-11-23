@@ -20,7 +20,9 @@ from app.routes import (
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup: Ensure tables, seed data, and start simulation
-    print("Initializing Smart Manufacturing Database & Tables...")
+    print("Initializing Automotive AI database and vehicle component tables...")
+    Base.metadata.create_all(bind=engine)
+    migrate_vehicle_columns()
     Base.metadata.create_all(bind=engine)
     simulation_engine.seed_database_if_needed()
     await simulation_engine.start()
@@ -32,7 +34,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    description="Industrial AI-powered Predictive Maintenance & Machine Failure Intelligence platform for Escorts Kubota Manufacturing Facilities",
+    description="AI-powered passenger-car component health monitoring, failure prediction, and maintenance intelligence.",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -47,10 +49,34 @@ app.add_middleware(
 )
 
 from fastapi.staticfiles import StaticFiles
+from sqlalchemy import text
+
+def migrate_vehicle_columns():
+    with engine.begin() as connection:
+        columns = {
+            row[1]: row
+            for row in connection.execute(text("PRAGMA table_info(machines)")).fetchall()
+        }
+        additions = {
+            "vehicle_category": "VARCHAR(30) DEFAULT 'Sedan'",
+            "fuel_type": "VARCHAR(30) DEFAULT 'Petrol'",
+            "mileage": "FLOAT DEFAULT 25000",
+            "manufacturing_year": "INTEGER DEFAULT 2024",
+            "component_health_summary": "TEXT DEFAULT '{}'",
+        }
+        for name, definition in additions.items():
+            if name not in columns:
+                connection.execute(text(f"ALTER TABLE machines ADD COLUMN {name} {definition}"))
+
+migrate_vehicle_columns()
+Base.metadata.create_all(bind=engine)
+simulation_engine.seed_database_if_needed()
 
 # Register Routers
 app.include_router(dashboard.router)
 app.include_router(machines.router)
+app.include_router(machines.vehicles_router)
+app.include_router(machines.components_router)
 app.include_router(sensors.router)
 app.include_router(predictions.router)
 app.include_router(alerts.router)
@@ -83,7 +109,7 @@ else:
     @app.get("/", tags=["Root"])
     def root():
         return {
-            "message": "Welcome to SMARTMFG AI – Predictive Maintenance Intelligence Suite API",
+            "message": "Welcome to AUTOMOTIVE AI – Smart Car Component Predictive Maintenance API",
             "docs_url": "/docs",
             "plant": settings.PLANT,
             "status": "operational"

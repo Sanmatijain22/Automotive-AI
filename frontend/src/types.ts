@@ -1,5 +1,11 @@
 export interface Machine {
   id: string;
+  vehicle_id?: string;
+  vehicle_model?: string;
+  vehicle_category?: string;
+  fuel_type?: string;
+  mileage?: number;
+  manufacturing_year?: number;
   name: string;
   department: string;
   model_number: string;

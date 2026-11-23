@@ -78,15 +78,15 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
           <div>
             <div className="flex items-center space-x-2">
-              <span className="font-extrabold tracking-wide text-base text-white">SMARTMFG AI</span>
+              <span className="font-extrabold tracking-wide text-base text-white">AUTOMOTIVE AI</span>
               <span className="text-xs px-2 py-0.5 rounded bg-blue-900/60 text-blue-300 border border-blue-700/50 font-mono font-medium">
                 v1.4 PROD
               </span>
             </div>
             <div className="text-xs text-slate-400 flex items-center gap-2">
-              <span className="font-semibold text-slate-300">PLANT:</span> ESCORTS-KUBOTA-HQ
+              <span className="font-semibold text-slate-300">FLEET:</span> Passenger Vehicles
               <span className="text-slate-600">•</span>
-              <span>DEPT: Manufacturing Operations</span>
+              <span>OPS: Predictive Maintenance</span>
             </div>
           </div>
         </div>
@@ -95,7 +95,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex items-center justify-center">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold tracking-wider uppercase animate-pulse">
             <Info className="h-3.5 w-3.5" />
-            <span>DEMO / SIMULATED DATA — INDUSTRIAL PILOT</span>
+            <span>DEMO / SIMULATED VEHICLE DATA</span>
           </div>
         </div>
 
@@ -148,43 +148,43 @@ export const Navbar: React.FC<NavbarProps> = ({
                   Select Demonstration Scenario
                 </div>
                 <button
-                  onClick={() => handleTriggerScenario('NORMAL', 'CNC-001', 'normal')}
+                  onClick={() => handleTriggerScenario('NORMAL', 'VH-001', 'normal')}
                   className="w-full text-left p-2 rounded hover:bg-slate-800 flex items-start gap-2.5 transition-colors"
                 >
                   <RotateCcw className="h-4 w-4 text-emerald-400 mt-0.5" />
                   <div>
                     <div className="font-semibold text-white">Scenario 1: Nominal Baseline</div>
-                    <div className="text-[11px] text-slate-400">All machines operating within green envelope</div>
+                    <div className="text-[11px] text-slate-400">All vehicles operating within configured green ranges</div>
                   </div>
                 </button>
                 <button
-                  onClick={() => handleTriggerScenario('FAULT_INJECTION', 'CNC-001', 'bearing_and_thermal')}
+                  onClick={() => handleTriggerScenario('FAULT_INJECTION', 'VH-001', 'engine_overheat')}
                   className="w-full text-left p-2 rounded hover:bg-slate-800 flex items-start gap-2.5 transition-colors"
                 >
                   <Flame className="h-4 w-4 text-rose-400 mt-0.5" />
                   <div>
-                    <div className="font-semibold text-rose-300">Scenario 2: CNC Overheat & Bearing Wear</div>
-                    <div className="text-[11px] text-slate-400">Ramps Temp &gt; 90°C & Vib &gt; 8 mm/s on CNC-001</div>
+                    <div className="font-semibold text-rose-300">Scenario 2: Engine Overheat & Vibration</div>
+                    <div className="text-[11px] text-slate-400">Raises engine temperature and drivetrain vibration on VH-001</div>
                   </div>
                 </button>
                 <button
-                  onClick={() => handleTriggerScenario('FAULT_INJECTION', 'HYD-002', 'hydraulic_leak')}
+                  onClick={() => handleTriggerScenario('FAULT_INJECTION', 'VH-003', 'transmission_fault')}
                   className="w-full text-left p-2 rounded hover:bg-slate-800 flex items-start gap-2.5 transition-colors"
                 >
                   <Droplets className="h-4 w-4 text-sky-400 mt-0.5" />
                   <div>
-                    <div className="font-semibold text-sky-300">Scenario 3: Hydraulic Press Leak</div>
-                    <div className="text-[11px] text-slate-400">Severe pressure drop on HYD-002 to &lt; 60 bar</div>
+                    <div className="font-semibold text-sky-300">Scenario 3: Transmission Pressure Fault</div>
+                    <div className="text-[11px] text-slate-400">Simulates pressure loss and vibration on VH-003</div>
                   </div>
                 </button>
                 <button
-                  onClick={() => handleTriggerScenario('FAULT_INJECTION', 'CNV-007', 'electrical_overload')}
+                  onClick={() => handleTriggerScenario('FAULT_INJECTION', 'VH-004', 'electrical_overload')}
                   className="w-full text-left p-2 rounded hover:bg-slate-800 flex items-start gap-2.5 transition-colors"
                 >
                   <Zap className="h-4 w-4 text-yellow-400 mt-0.5" />
                   <div>
-                    <div className="font-semibold text-yellow-300">Scenario 4: Conveyor Motor Overcurrent</div>
-                    <div className="text-[11px] text-slate-400">Motor drag & power surge on CNV-007</div>
+                    <div className="font-semibold text-yellow-300">Scenario 4: EV Charging System Stress</div>
+                    <div className="text-[11px] text-slate-400">Simulates electrical load stress on VH-004</div>
                   </div>
                 </button>
               </div>

@@ -39,6 +39,13 @@ class MachineBase(BaseModel):
 
 class MachineResponse(MachineBase):
     id: str
+    vehicle_category: Optional[str] = "Sedan"
+    fuel_type: Optional[str] = "Petrol"
+    mileage: Optional[float] = 25000.0
+    manufacturing_year: Optional[int] = 2024
+    component_health_summary: Optional[Any] = None
+    vehicle_id: Optional[str] = None
+    vehicle_model: Optional[str] = None
     current_temperature: float
     current_vibration: float
     current_rpm: float

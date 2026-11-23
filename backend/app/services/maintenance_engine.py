@@ -9,50 +9,50 @@ class MaintenanceRecommendationEngine:
         
         # Vibration Analysis
         if vibration >= 7.0:
-            recommendations.append("Critical vibration detected. Perform immediate dynamic spindle balance check, inspect primary drive bearings, and verify structural foundation anchor bolts.")
-            tasks_suggested.append("Emergency Bearing Replacement & Shaft Laser Alignment")
+            recommendations.append("Critical drivetrain vibration detected. Stop the vehicle if safe and inspect engine mounts, gearbox mounts, wheel balance, and bearing condition.")
+            tasks_suggested.append("Emergency Drivetrain Inspection and Component Replacement")
             priority = "CRITICAL"
         elif vibration >= 4.0:
-            recommendations.append("Elevated vibration observed. Lubricate bearings, inspect drive belts/couplings for wear, and schedule vibration spectrum FFT analysis.")
-            tasks_suggested.append("Spindle Bearing Lubrication & Alignment Check")
+            recommendations.append("Elevated vibration observed. Inspect engine mounts, wheel balance, suspension bushings, and gearbox mounts.")
+            tasks_suggested.append("Drivetrain and Suspension Vibration Inspection")
             if priority != "CRITICAL":
                 priority = "HIGH"
 
         # Thermal Analysis
         if temperature >= 90.0:
-            recommendations.append("Thermal runaway hazard. Flush and refill closed-loop cooling jacket, check coolant flow rate, inspect radiator core for fin blockage, and verify fan operation.")
-            tasks_suggested.append("Cooling System Deep Flush & Fan Motor Inspection")
+            recommendations.append("Engine thermal risk. Check coolant level, radiator airflow, thermostat operation, cooling fan, and engine temperature sensor.")
+            tasks_suggested.append("Cooling System Inspection and Engine Temperature Diagnosis")
             if priority not in ["CRITICAL"]:
                 priority = "HIGH"
         elif temperature >= 78.0:
-            recommendations.append("Operating temperature trending above normal envelope. Inspect coolant level, clean heat exchanger filters, and verify cabinet ventilation louvers.")
-            tasks_suggested.append("Coolant Level Top-up & Filter Element Cleaning")
+            recommendations.append("Operating temperature trending above normal. Inspect coolant level, radiator, hoses, fan operation, and thermostat.")
+            tasks_suggested.append("Coolant System Inspection")
             if priority == "LOW":
                 priority = "MEDIUM"
 
         # Pressure Analysis
         if pressure < 60.0:
-            recommendations.append("Severe hydraulic pressure drop. Inspect suction strainers, check for manifold bypass leakage, inspect pump impellers, and check hydraulic oil reservoir level.")
-            tasks_suggested.append("Hydraulic System Leak Inspection & Suction Filter Replacement")
+            recommendations.append("Severe transmission pressure drop. Inspect transmission oil level, pump, pressure control valve, and hydraulic leaks.")
+            tasks_suggested.append("Transmission Pressure and Oil Leak Inspection")
             if priority == "LOW":
                 priority = "HIGH"
         elif pressure > 200.0:
-            recommendations.append("Hydraulic over-pressure condition. Check proportional pressure relief valve spool calibration and clear line restrictions.")
-            tasks_suggested.append("Pressure Relief Valve Recalibration & Orifice Check")
+            recommendations.append("Unusual pressure condition. Inspect pressure sensors and pressure-control components for restriction or calibration error.")
+            tasks_suggested.append("Pressure Sensor and Control System Inspection")
             if priority == "LOW":
                 priority = "MEDIUM"
 
         # Power Analysis
         if power > 50.0:
-            recommendations.append("Abnormal power consumption. Inspect 3-phase motor current balance, check winding insulation resistance (Megger test), and inspect guideways for mechanical binding.")
-            tasks_suggested.append("Motor Electrical Megger Test & Axis Guideway Lubrication")
+            recommendations.append("Abnormal electrical or charging load. Inspect battery connections, alternator output, accessory loading, and charging system.")
+            tasks_suggested.append("Battery and Charging System Diagnostic")
             if priority == "LOW":
                 priority = "MEDIUM"
 
         # Operating Hours Analysis
         if operating_hours > 7500.0:
-            recommendations.append("Machine has exceeded 7,500 operating hours. Schedule comprehensive factory overhaul, replacement of critical rubber seals, and calibration of positioning encoders.")
-            tasks_suggested.append("7,500-Hour Major Overhaul & Seal Kit Refresh")
+            recommendations.append("Vehicle duty history indicates elevated wear. Schedule a comprehensive component inspection and fluid-service review.")
+            tasks_suggested.append("High-Mileage Component Inspection")
             if priority == "LOW":
                 priority = "MEDIUM"
 

@@ -28,6 +28,11 @@ class Machine(Base):
     last_maintenance = Column(DateTime, default=datetime.datetime.utcnow)
     next_scheduled_maintenance = Column(DateTime, default=lambda: datetime.datetime.utcnow() + datetime.timedelta(days=30))
     updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+    vehicle_category = Column(String(30), default="Sedan")
+    fuel_type = Column(String(30), default="Petrol")
+    mileage = Column(Float, default=25000.0)
+    manufacturing_year = Column(Integer, default=2024)
+    component_health_summary = Column(Text, default="{}")
 
     # Operating baselines & boundaries for realistic machine-specific behavior
     baseline_temp = Column(Float, default=65.0)
@@ -41,6 +46,21 @@ class Machine(Base):
     alerts = relationship("Alert", back_populates="machine", cascade="all, delete-orphan", order_by="desc(Alert.timestamp)")
     maintenance_tasks = relationship("MaintenanceTask", back_populates="machine", cascade="all, delete-orphan", order_by="desc(MaintenanceTask.scheduled_date)")
     predictions = relationship("Prediction", back_populates="machine", cascade="all, delete-orphan", order_by="desc(Prediction.timestamp)")
+
+
+class AutomotiveComponent(Base):
+    __tablename__ = "automotive_components"
+
+    id = Column(String(50), primary_key=True, index=True)
+    vehicle_id = Column(String(50), ForeignKey("machines.id"), nullable=False, index=True)
+    category = Column(String(50), nullable=False)
+    name = Column(String(100), nullable=False)
+    health_score = Column(Float, default=95.0)
+    operating_status = Column(String(20), default="healthy")
+    failure_risk = Column(String(20), default="Low Risk")
+    sensor_readings = Column(Text, default="{}")
+    maintenance_history = Column(Text, default="[]")
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
 
 
 class SensorReading(Base):

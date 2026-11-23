@@ -57,7 +57,7 @@ def download_machine_pdf_report(machine_id: str, db: Session = Depends(get_db)):
         recommendations=recs
     )
 
-    filename = f"SMARTMFG_{machine.id}_HealthReport.pdf"
+    filename = f"AUTOMOTIVE_AI_{machine.id}_HealthReport.pdf"
     return Response(
         content=pdf_bytes,
         media_type="application/pdf",

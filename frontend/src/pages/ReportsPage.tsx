@@ -41,7 +41,7 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
         <div>
           <h1 className="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
             <FileText className="h-5 w-5 text-blue-400" />
-            <span>Industrial Machine Health & Audit Reports</span>
+            <span>Vehicle Health & Maintenance Reports</span>
           </h1>
           <p className="text-xs text-slate-400">
             Generate formal multi-page engineering PDF reports with telemetry history, ML diagnostics, and ISO 55000 compliance logs.
@@ -60,7 +60,7 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
         <div className="space-y-1">
           <div className="font-bold text-white flex items-center gap-2">
             <ShieldCheck className="h-4 w-4 text-emerald-400" />
-            <span>Standardized Escorts Kubota Machine Health Documentation</span>
+            <span>Passenger-car component health documentation</span>
           </div>
           <p className="text-slate-300 text-[11px] max-w-2xl leading-relaxed">
             Each downloadable PDF report includes comprehensive equipment metadata, live sensor telemetry compared against engineering baselines, Isolation Forest anomaly scores, Random Forest failure probabilities, and prioritized maintenance action items.
@@ -69,11 +69,11 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
 
         <div className="shrink-0 flex items-center gap-2">
           <button
-            onClick={() => handleDownload('CNC-001')}
+            onClick={() => handleDownload('VH-001')}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold shadow-md shadow-blue-600/30 transition-all text-xs"
           >
             <Download className="h-3.5 w-3.5" />
-            <span>Sample Report (CNC-001)</span>
+            <span>Sample Report (VH-001)</span>
           </button>
         </div>
       </div>
@@ -159,7 +159,7 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
           <span>Report Documentation Specifications</span>
         </h3>
         <p className="text-slate-300 leading-relaxed text-[11px]">
-          All machine health reports are compiled dynamically on-the-fly by the backend Python service utilizing ReportLab. Reports are formatted for standard A4/Letter industrial engineering archiving, with precise color-coded condition matrices, multi-channel telemetry tables, explainable AI model factors, and sign-off blocks.
+          Vehicle health reports are compiled dynamically by the backend using ReportLab, with component condition matrices, telemetry summaries, explainable AI factors, and maintenance recommendations.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3 pt-2 text-slate-400 text-[11px]">

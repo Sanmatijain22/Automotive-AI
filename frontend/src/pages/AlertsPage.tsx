@@ -95,7 +95,7 @@ export const AlertsPage: React.FC<AlertsPageProps> = ({
             <span>Predictive Alerts Centre</span>
           </h1>
           <p className="text-xs text-slate-400">
-            Real-time anomaly notifications triggered automatically by machine telemetry and ML threshold exceedance.
+            Real-time anomaly notifications triggered by vehicle telemetry and configured automotive thresholds.
           </p>
         </div>
 

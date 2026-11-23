@@ -30,12 +30,12 @@ export const DemoScenarioGuide: React.FC<DemoScenarioGuideProps> = ({
     {
       num: 1,
       title: 'Nominal Baseline',
-      desc: 'CNC-001 operating normally with healthy temperature (~62°C) and low vibration (<2.0 mm/s).',
+      desc: 'VH-001 operating normally with healthy engine temperature and low vibration.',
       actionLabel: 'Set Baseline',
       run: async () => {
         setIsBusy(true);
         await resetSimulation();
-        onSelectMachine('CNC-001');
+        onSelectMachine('VH-001');
         onNavigateTab('machines');
         onRefresh();
         setIsBusy(false);
@@ -44,13 +44,13 @@ export const DemoScenarioGuide: React.FC<DemoScenarioGuideProps> = ({
     },
     {
       num: 2,
-      title: 'Inject Thermal & Bearing Wear',
-      desc: 'Gradually increase temperature (>90°C) and vibration (>8.0 mm/s) on CNC Machining Center.',
+      title: 'Inject Engine Thermal Stress',
+      desc: 'Increase engine temperature and drivetrain vibration on VH-001.',
       actionLabel: 'Inject Fault',
       run: async () => {
         setIsBusy(true);
-        await triggerSimulationScenario('FAULT_INJECTION', 'CNC-001', 'bearing_and_thermal');
-        onSelectMachine('CNC-001');
+        await triggerSimulationScenario('FAULT_INJECTION', 'VH-001', 'engine_overheat');
+        onSelectMachine('VH-001');
         onNavigateTab('machines');
         onRefresh();
         setIsBusy(false);
@@ -60,7 +60,7 @@ export const DemoScenarioGuide: React.FC<DemoScenarioGuideProps> = ({
     {
       num: 3,
       title: 'AI Anomaly & Risk Evaluation',
-      desc: 'Observe Isolation Forest & Random Forest classify CNC-001 as High Risk with contributing factors.',
+      desc: 'Observe Isolation Forest and Random Forest classify VH-001 as High Risk with contributing factors.',
       actionLabel: 'View AI Intelligence',
       run: async () => {
         onNavigateTab('predictions');
@@ -70,7 +70,7 @@ export const DemoScenarioGuide: React.FC<DemoScenarioGuideProps> = ({
     {
       num: 4,
       title: 'Review Predictive Alerts',
-      desc: 'Automated alert generated for CNC Machining Center: critical vibration & thermal exceedance.',
+      desc: 'Automated alert for VH-001: critical engine temperature or drivetrain vibration exceedance.',
       actionLabel: 'Go to Alerts',
       run: async () => {
         onNavigateTab('alerts');
@@ -80,7 +80,7 @@ export const DemoScenarioGuide: React.FC<DemoScenarioGuideProps> = ({
     {
       num: 5,
       title: 'Prescribed Recommendations',
-      desc: 'Actionable maintenance guidance: Spindle bearing inspection and closed-loop cooling flush.',
+      desc: 'Actionable guidance: cooling-system inspection and drivetrain vibration diagnosis.',
       actionLabel: 'View Work Orders',
       run: async () => {
         onNavigateTab('maintenance');
@@ -90,10 +90,10 @@ export const DemoScenarioGuide: React.FC<DemoScenarioGuideProps> = ({
     {
       num: 6,
       title: 'Generate PDF Report',
-      desc: 'Download the comprehensive multi-page industrial Machine Health PDF Report with ReportLab.',
-      actionLabel: 'Download CNC-001 PDF',
+      desc: 'Download the vehicle health PDF report with telemetry and AI diagnostics.',
+      actionLabel: 'Download VH-001 PDF',
       run: async () => {
-        window.open(getReportDownloadUrl('CNC-001'), '_blank');
+        window.open(getReportDownloadUrl('VH-001'), '_blank');
         onNavigateTab('reports');
         setCurrentStep(1);
       }

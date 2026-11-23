@@ -32,7 +32,7 @@ export const MaintenancePage: React.FC<MaintenancePageProps> = ({
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   // New task form state
-  const [selectedMachineId, setSelectedMachineId] = useState<string>(machines[0]?.id || 'CNC-001');
+  const [selectedMachineId, setSelectedMachineId] = useState<string>(machines[0]?.id || 'VH-001');
   const [taskTitle, setTaskTitle] = useState('');
   const [taskDesc, setTaskDesc] = useState('');
   const [taskPriority, setTaskPriority] = useState('HIGH');
@@ -109,7 +109,7 @@ export const MaintenancePage: React.FC<MaintenancePageProps> = ({
         <div>
           <h1 className="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
             <Wrench className="h-5 w-5 text-blue-400" />
-            <span>Industrial Maintenance Management</span>
+            <span>Automotive Maintenance Management</span>
           </h1>
           <p className="text-xs text-slate-400">
             Automated work orders, AI-recommended interventions, technician dispatch, and lifecycle overhaul logs.
@@ -325,7 +325,7 @@ export const MaintenancePage: React.FC<MaintenancePageProps> = ({
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Spindle Bearing Replacement & Laser Alignment"
+                  placeholder="e.g. Cooling System Inspection"
                   value={taskTitle}
                   onChange={(e) => setTaskTitle(e.target.value)}
                   className="w-full p-2 bg-slate-950 border border-slate-700 rounded text-slate-200 focus:outline-none focus:border-blue-500"

@@ -98,7 +98,7 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
         description: taskDescription || (recs?.recommendations?.summary_recommendation || 'Preventive overhaul based on sensor telemetry.'),
         priority: taskPriority,
         category: 'Predictive',
-        assigned_technician: 'Lead Plant Specialist',
+        assigned_technician: 'Lead Automotive Technician',
         estimated_hours: 2.5
       });
       setShowTaskModal(false);
@@ -123,8 +123,8 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
   if (!machine) {
     return (
       <div className="p-6 text-center text-slate-400">
-        <p>Machine not found.</p>
-        <button onClick={onBack} className="mt-3 text-blue-400 font-semibold text-xs">← Back to Machines</button>
+        <p>Vehicle not found.</p>
+        <button onClick={onBack} className="mt-3 text-blue-400 font-semibold text-xs">← Back to Vehicles</button>
       </div>
     );
   }
@@ -252,10 +252,10 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
           </div>
         </div>
 
-        {/* Hydraulic Pressure */}
+        {/* Transmission/Pressure */}
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-md">
           <div className="flex items-center justify-between text-slate-400 text-[11px]">
-            <span>Hydraulic Press.</span>
+            <span>Pressure</span>
             <Gauge className="h-4 w-4 text-sky-400" />
           </div>
           <div className="mt-1 text-xl font-black text-white font-mono">

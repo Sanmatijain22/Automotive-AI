@@ -51,7 +51,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center space-y-3">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="text-sm text-slate-400">Loading plant telemetry & intelligence...</p>
+          <p className="text-sm text-slate-400">Loading fleet telemetry & intelligence...</p>
         </div>
       </div>
     );
@@ -77,19 +77,19 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
 
   return (
     <div className="p-4 lg:p-6 space-y-6">
-      {/* Top Banner with Plant Status */}
+      {/* Top Banner with Fleet Status */}
       <div className="flex flex-col md:flex-row md:items-center justify-between pb-2 border-b border-slate-800 gap-2">
         <div>
           <h1 className="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
             Executive Reliability Dashboard
           </h1>
           <p className="text-xs text-slate-400">
-            Real-time machine health diagnostics, predictive downtime avoidance, and anomaly intelligence.
+            Real-time vehicle health diagnostics, predictive maintenance, and anomaly intelligence.
           </p>
         </div>
         <div className="flex items-center gap-3 text-xs">
           <div className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 flex items-center gap-2">
-            <span className="text-slate-400">Plant Availability:</span>
+            <span className="text-slate-400">Fleet Availability:</span>
             <span className="font-mono font-bold text-emerald-400">97.8%</span>
           </div>
           <div className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 flex items-center gap-2">
@@ -110,7 +110,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             <Activity className="h-4 w-4 text-blue-400" />
           </div>
           <div className="mt-2 text-2xl font-black text-white font-mono">{stats.total_machines}</div>
-          <div className="mt-1 text-[11px] text-slate-400">Escorts Fleet</div>
+          <div className="mt-1 text-[11px] text-slate-400">Passenger Vehicles</div>
         </div>
 
         {/* Healthy Machines */}
@@ -406,7 +406,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                   Department Breakdown
                 </h3>
               </div>
-              <span className="text-[10px] text-slate-400">Escorts Plant</span>
+              <span className="text-[10px] text-slate-400">Passenger Fleet</span>
             </div>
 
             <div className="space-y-3">
@@ -431,7 +431,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           </div>
 
           <div className="mt-4 pt-3 border-t border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
-            <span>Overall Plant Compliance:</span>
+            <span>Overall Fleet Health:</span>
             <span className="font-bold text-emerald-400">99.4% (ISO 55000)</span>
           </div>
         </div>

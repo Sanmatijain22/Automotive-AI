@@ -12,7 +12,7 @@ import {
 const BASE_URL = (
   import.meta.env.VITE_API_URL ||
   import.meta.env.VITE_API_BASE_URL ||
-  'https://smart-predictive-maintaninace-system.onrender.com'
+  'http://127.0.0.1:8000'
 ).replace(/\/+$/, '');
 
 async function apiRequest<T>(
@@ -198,8 +198,8 @@ export async function pauseSimulation(): Promise<any> {
 
 export async function triggerSimulationScenario(
   scenario: string,
-  machineId: string = 'CNC-001',
-  faultType: string = 'bearing_and_thermal'
+  machineId: string = 'VH-001',
+  faultType: string = 'engine_overheat'
 ): Promise<any> {
   return apiRequest<any>('/api/simulation/scenario', {
     method: 'POST',

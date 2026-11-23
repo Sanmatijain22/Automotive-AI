@@ -23,10 +23,9 @@ def get_dashboard_stats(db: Session = Depends(get_db)):
     # Predictive events: machines in warning or critical
     predicted_maintenance_events = observation_machines + (critical_machines * 2)
     
-    # Estimated downtime avoided (demo calculation: 14.5 hours per predicted intervention)
-    estimated_downtime_avoided = round(predicted_maintenance_events * 14.5 + 42.0, 1)
-    # Approximate cost savings in INR (₹45,000 per downtime hour in heavy tractor manufacturing)
-    estimated_savings_inr = round(estimated_downtime_avoided * 45000)
+    # Demonstration estimate only: reduced roadside breakdown and workshop downtime
+    estimated_downtime_avoided = round(predicted_maintenance_events * 8.5 + 24.0, 1)
+    estimated_savings_inr = round(estimated_downtime_avoided * 6500)
 
     # Machine health distribution data for charts
     health_distribution = [

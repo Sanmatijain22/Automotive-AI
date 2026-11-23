@@ -262,11 +262,11 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({
             </div>
           </div>
 
-          {/* Hydraulic Pressure */}
+          {/* System Pressure */}
           <div className="p-3 rounded-lg bg-slate-950/80 border border-slate-800 space-y-1.5">
             <div className="flex items-center justify-between">
               <span className="text-slate-300 font-semibold flex items-center gap-1">
-                <Gauge className="h-3.5 w-3.5 text-sky-400" /> Hydraulic Press. (bar)
+                <Gauge className="h-3.5 w-3.5 text-sky-400" /> System Pressure
               </span>
               <span className="font-mono font-bold text-white text-sm">{simPress} bar</span>
             </div>
@@ -371,7 +371,7 @@ export const PredictionsPage: React.FC<PredictionsPageProps> = ({
         )}
       </div>
 
-      {/* Row 3: Live Predictions Across Monitored Machines */}
+      {/* Row 3: Live Predictions Across Monitored Vehicles */}
       <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-lg space-y-3">
         <div className="flex items-center justify-between pb-2 border-b border-slate-800">
           <h3 className="text-xs font-bold text-white uppercase tracking-wider">
